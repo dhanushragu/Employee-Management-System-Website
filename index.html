@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PeopleDesk | Employee Management</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#"><span class="brand-mark">P</span><span>PeopleDesk<small>EMPLOYEE PORTAL</small></span></a>
+      <div class="nav-label">WORKSPACE</div>
+      <nav>
+        <button class="nav-item active" data-view="dashboard"><span>▦</span> Dashboard</button>
+        <button class="nav-item" data-view="employees"><span>♙</span> Employees</button>
+        <button class="nav-item" data-view="departments"><span>▤</span> Departments</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="help-card"><span class="help-icon">✦</span><strong>Need a hand?</strong><p>Manage your team with confidence.</p><button id="helpBtn">View quick guide ↗</button></div>
+        <div class="profile"><div class="avatar admin-avatar">DR</div><div><strong>Dhanush R</strong><small>Administrator</small></div><span class="profile-dots">•••</span></div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">☰</button>
+        <div class="breadcrumb">Workspace <span>/</span> <strong id="breadcrumbCurrent">Dashboard</strong></div>
+        <div class="top-actions"><span class="demo-badge"><i></i> Frontend demo</span><button class="icon-btn" id="themeHint" title="Demo information">ⓘ</button><div class="avatar top-avatar">DR</div></div>
+      </header>
+
+      <section class="view active-view" id="dashboardView">
+        <div class="page-heading"><div><p class="eyebrow">OVERVIEW</p><h1>Good morning, Dhanush <span>✦</span></h1><p class="muted">Here’s what’s happening with your team today.</p></div><button class="primary-btn" id="addEmployeeTop">＋ Add employee</button></div>
+        <div class="stats-grid">
+          <article class="stat-card"><div class="stat-top"><span>Total employees</span><span class="stat-icon purple">♙</span></div><div class="stat-number" id="totalStat">12</div><div class="stat-foot"><span class="trend">↗ 8.2%</span> <span>from last month</span></div></article>
+          <article class="stat-card"><div class="stat-top"><span>Active employees</span><span class="stat-icon green">✓</span></div><div class="stat-number" id="activeStat">10</div><div class="stat-foot"><span class="status-dot green-dot"></span><span>Currently working</span></div></article>
+          <article class="stat-card"><div class="stat-top"><span>On leave</span><span class="stat-icon orange">◷</span></div><div class="stat-number" id="leaveStat">1</div><div class="stat-foot"><span>Across all departments</span></div></article>
+          <article class="stat-card"><div class="stat-top"><span>Departments</span><span class="stat-icon blue">▤</span></div><div class="stat-number" id="departmentStat">5</div><div class="stat-foot"><span>Teams in your organization</span></div></article>
+        </div>
+        <div class="content-grid">
+          <section class="panel employee-panel"><div class="panel-heading"><div><h2>Team members</h2><p class="muted">A quick look at your people</p></div><button class="text-btn" data-goto="employees">View all →</button></div><div class="table-wrap"><table><thead><tr><th>EMPLOYEE</th><th>DEPARTMENT</th><th>STATUS</th></tr></thead><tbody id="recentEmployees"></tbody></table></div></section>
+          <section class="panel departments-panel"><div class="panel-heading"><div><h2>Departments</h2><p class="muted">People by team</p></div><button class="text-btn" data-goto="departments">View all →</button></div><div id="departmentBars" class="department-bars"></div></section>
+        </div>
+        <div class="notice"><span class="notice-icon">ⓘ</span><div><strong>Frontend preview mode</strong><p>Employee records are stored in this browser only. Later, Flask and MySQL can replace this demo storage.</p></div></div>
+      </section>
+
+      <section class="view" id="employeesView">
+        <div class="page-heading"><div><p class="eyebrow">PEOPLE DIRECTORY</p><h1>Employees</h1><p class="muted">Manage employee details and team status.</p></div><button class="primary-btn" id="addEmployeeBtn">＋ Add employee</button></div>
+        <section class="panel directory-panel"><div class="toolbar"><div class="search-box"><span>⌕</span><input id="searchInput" type="search" placeholder="Search name, email or role..."></div><select id="departmentFilter" aria-label="Filter by department"><option value="">All departments</option></select><select id="statusFilter" aria-label="Filter by status"><option value="">All statuses</option><option>Active</option><option>On Leave</option><option>Inactive</option></select></div><div class="table-wrap"><table class="full-table"><thead><tr><th>EMPLOYEE</th><th>EMPLOYEE ID</th><th>DEPARTMENT</th><th>ROLE</th><th>JOINED DATE</th><th>STATUS</th><th>ACTION</th></tr></thead><tbody id="employeeTable"></tbody></table></div><div class="table-footer"><span id="recordCount">12 employees</span><span>Showing all matching records</span></div></section>
+      </section>
+
+      <section class="view" id="departmentsView">
+        <div class="page-heading"><div><p class="eyebrow">ORGANIZATION</p><h1>Departments</h1><p class="muted">An overview of your teams and their members.</p></div></div>
+        <div id="departmentCards" class="department-card-grid"></div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="employeeModal" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-heading"><div><p class="eyebrow">EMPLOYEE DETAILS</p><h2 id="modalTitle">Add employee</h2></div><button class="close-btn" id="closeModal" aria-label="Close">×</button></div>
+      <form id="employeeForm">
+        <input type="hidden" id="editId">
+        <div class="form-grid">
+          <label>Full name *<input id="fullName" required maxlength="80" placeholder="e.g. Priya Kumar"></label>
+          <label>Email address *<input id="email" type="email" required placeholder="name@company.com"></label>
+          <label>Department *<select id="department" required><option value="">Select department</option></select></label>
+          <label>Job title *<input id="role" required placeholder="e.g. Software Engineer"></label>
+          <label>Joining date *<input id="joiningDate" type="date" required></label>
+          <label>Status *<select id="status" required><option>Active</option><option>On Leave</option><option>Inactive</option></select></label>
+        </div>
+        <div class="modal-actions"><button type="button" class="secondary-btn" id="cancelModal">Cancel</button><button type="submit" class="primary-btn">Save employee</button></div>
+      </form>
+    </div>
+  </div>
+  <div class="toast" id="toast" role="status"></div>
+  <script src="script.js"></script>
+</body>
+</html>
